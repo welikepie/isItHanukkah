@@ -1,5 +1,0 @@
-http://www.php.net/manual/en/ref.calendar.php
-http://www.php.net/manual/en/calendar.installation.php
-http://www.php.net/manual/en/function.date-sunset.php
-
-Get PHP to do that shit.

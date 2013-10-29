@@ -19,6 +19,7 @@ $responseArr = array();
 		$responseArr["astronomical_sundown"] = (bool)!$info["sunset"];
 			
 		}
+		
 		else{
 		$responseArr["civil_sundown"] = (bool)($info["civil_twilight_end"]<=time());
 		$responseArr["nautical_sundown"] = (bool)($info["nautical_twilight_end"]<=time());
