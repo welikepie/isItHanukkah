@@ -1,57 +1,35 @@
-/*
-  Web client
- 
- This sketch connects to a website (http://www.google.com)
- using a WiFi shield.
- 
- This example is written for a network using WPA encryption. For 
- WEP or WPA, change the Wifi.begin() call accordingly.
- 
- This example is written for a network using WPA encryption. For 
- WEP or WPA, change the Wifi.begin() call accordingly.
- 
- Circuit:
- * WiFi shield attached
- 
- created 13 July 2010
- by dlf (Metodo2 srl)
- modified 31 May 2012
- by Tom Igoe
- */
- 
-#include <SPI.h>
-#include <WiFi.h>
 #include <aJSON.h>
 #include <avr/pgmspace.h>
+#include <SPI.h>
+#include <WiFi.h>
 
 
 boolean flicker = true;
-int blinkenLichten = 850;
-
-long interval = 100000; // interval at which to do something (milliseconds), 5 minutes in this case.
-
-int nums[8] = {2,3,4,5,6,8,9,13};
+int blinkenLichten = 750;
+int nums[9] = {A0,A1,A2,A3,A4,A5,2,3,4}; //first element is always on. You've got to light the menora from something ;)
 char ssid[] = "Macs";
 char pass[] = "!pandzior";
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
+long interval = 100000; // interval at which to do something (milliseconds), 5 minutes in this case.
+int globalLights = -1;
 unsigned long previousMillis = 0; // last time update
+unsigned long currentMillis;
+
 char response[512];
 int index = 0;
 boolean overflowed = false;
 boolean alreadyCalled = false;
 int status = WL_IDLE_STATUS;
-// if you don't want to use DNS (and reduce your sketch size)
-// use the numeric IP instead of the name for the server:
-//IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-char server[] = "dev.welikepie.com";    // name address for Google (using DNS)
-
+char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
+char* things = "{\"dayOf\":5,\"isHappening\":true}";
 // Initialize the Ethernet client library
 // with the IP address and port of the server 
 // that you want to connect to (port 80 is default for HTTP):
 WiFiClient client;
-char *str = "{\"dayOf\":\"5\",\"isHappening\":\"true\"}";
+boolean started = false;
 char *thing;
 void setup() {
+  //setting all of our pins explicitly to outputs.
   pinMode(nums[0], OUTPUT);
   pinMode(nums[1], OUTPUT);
   pinMode(nums[2], OUTPUT);
@@ -60,19 +38,16 @@ void setup() {
   pinMode(nums[5], OUTPUT);
   pinMode(nums[6], OUTPUT);
   pinMode(nums[7], OUTPUT);
+  pinMode(nums[8], OUTPUT);
   //Initialize serial and wait for port to open:
   Serial.begin(9600); 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-   
-    //if(str(json_get_value(token_list, "isHappening")).equals("true")){
-     // Serial.print("THINGZANDSHIT");
-    //}
-    
+    testObjects(things);
     // check for the presence of the shield:
     if (WiFi.status() == WL_NO_SHIELD) {
-      Serial.println("WiFi shield not present"); 
+      Serial.println("WiFi shield not present. We need this to connect to our API server."); 
       // don't continue:
       while(true);
     } 
@@ -83,97 +58,89 @@ void setup() {
     Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:    
     status = WiFi.begin(ssid, pass);
-  
     // wait 10 seconds for connection:
     delay(10000);
   } 
   Serial.println("Connected to wifi");
   printWifiStatus();
   
-  Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
-  if (client.connect(server, 80)) {
-    Serial.println("connected to server"); 
-    // Make a HTTP request:
-    client.println("GET /isItHannukah/api/doTheyKnow/?forceDay=5 HTTP/1.1");
-    client.println("Host: dev.welikepie.com");
-    client.println("Connection: close");
-    client.println();
-  }
-  dialEmUp();
 }
 
 void loop() {
-  lightEmUp(8);
-   unsigned long currentMillis = millis();
+  if(started == false){
+    dialEmUp();
+    started = true;
+  }
+
+  currentMillis = millis(); //code block for timing between API calls to the server.
   if(currentMillis - previousMillis > interval) {
      previousMillis = currentMillis;  
-    Serial.println("DIALING");
-    dialEmUp();
-     // do something
+     dialEmUp();
   }
+    lightEmUp(globalLights);
   // if there are incoming bytes available 
-  // from the server, read them and print them:
+  // from the server, read them and write them to a char[]
+  
   while(client.available()) {
-    char c = client.read();
     if(index < 511){
+    char c = client.read();
       response[index] = c;
-      index++;
+      index++;      
     }
     else{
       overflowed = true;
     }
   }
-if(client.available() == 0 && index > 0 && alreadyCalled == false){
-    alreadyCalled = true;
-    echoStuff();
-  }
+  /*else if(!client.available() && index != 0){
+  echoStuff();
+  }*/
+  
   if (!client.connected()) {
     client.stop();
   }
 }
+
 void echoStuff(){
 int setInt = 0;
 String JSONstring = "";
-JSONstring+='"';
 for(int i = 0; i < index; i++){  
-  if(response[i] == '{'){
-    setInt = 1;
+    //some rather dumb code to parse out one-tier JSON.
+    if( response[i] == '{'){
+      setInt = 1;
+    }
+  if(setInt>0){
+    Serial.print(response[i]);
+    if(response[i] == '"'){
+    JSONstring+="\\\"";
+    }
+    else if(response[i]=='\\'){
+    JSONstring+="\\\\";
+    }
+    else{
+    JSONstring+= response[i];
+    }
   }
-  if(setInt>0 && response[i]!='"' ){
-    JSONstring+=response[i];
-  }
-  if(response[i] == '}'){
+  if( response[i] == '}'){
   setInt = 0;
   }
 }
-JSONstring+='"';
 Serial.print(JSONstring);
-char JSON[JSONstring.length()]; 
-JSONstring.toCharArray(JSON, JSONstring.length());
-//json_to_token_list(JSON,token_list);
-
+Serial.print(JSONstring.equals("{\"dayOf\":5,\"isHappening\":true}"));
+char JSON[JSONstring.length()+1]; 
+JSONstring.toCharArray(JSON, JSONstring.length()+1);
+for(int i = 0; i < JSONstring.length(); i++){
+Serial.print(JSON[i]);
+}
 Serial.print("trying");
-//Serial.print(json_get_value(token_list, "isHappening"));
- aJsonObject* jsonObject = aJson.parse(str);
-     thing = aJson.print(jsonObject);
-     Serial.print(thing);
-    Serial.print(strlen(thing));
-    Serial.print("trying");
-   // aJsonObject* name = aJson.getObjectItem(jsonObject,"isHappening");
-    //Serial.print(jsonObject->type);
-   // Serial.println(name->type);
-    //Serial.print(jsonObject->isHappening);
-    Serial.print("success?");
-Serial.print("success?");
-//if(json_get_value(token_list, "isHappening") == "true"){
-//  Serial.print("THINGZANDSHIT");
-//}
-//release_token_list(token_list);
+//testObjects(JSON);
+testObjects();
+
 
 alreadyCalled = false;
 index = 0;
 }
+
 void dialEmUp() {
   if (client.connect(server, 80)) {
     index = 0;
@@ -204,21 +171,49 @@ void printWifiStatus() {
   Serial.println(" dBm");
 }
 
-void lightEmUp(int lights){
-  if(lights >= 8){
-  lights = 8;
+void testObjects(char* input) {
+  Serial.print("STARTED FUNCTION BITCHES");
+   aJsonObject* root = aJson.parse(input);
+  if(root == NULL){
+    testObjects(in);
   }
-  for(int i = 0; i <= lights; i++){
-    if(flicker!=false){
-      if(random(1000) > blinkenLichten){
-        digitalWrite(nums[i],HIGH);
+  aJsonObject* name = aJson.getObjectItem(root, "isHappening");
+  if (name != NULL) {
+    Serial.print("NOT NULL PARSING OF isHappening");
+    boolean th = name->valuebool;
+    if(th == 255 || th == 1 || th == true){
+      Serial.println("KICKING IT");
+       aJsonObject* dayOf = aJson.getObjectItem(root, "dayOf");
+        if (dayOf != NULL) {
+          int th = dayOf->valueint;
+            globalLights = th;
+        }
+        aJson.deleteItem(dayOf);
+    }
+    else if(th == 0 || th == false){
+      Serial.println("KICKING OFF");
+    }
+  }   
+  aJson.deleteItem(root);
+}
+
+void lightEmUp(int lights){
+  if(lights>0){
+    if(lights >= 8){
+      lights = 8;
+    }
+    for(int i = 0; i <= lights; i++){
+      if(flicker!=false){
+        if(random(1000) > blinkenLichten){
+          digitalWrite(nums[i],HIGH);
+        }
+        else{
+          digitalWrite(nums[i],LOW);
+        }
       }
       else{
-        digitalWrite(nums[i],LOW);
+          digitalWrite(nums[i],HIGH);
       }
-    }
-    else{
-        digitalWrite(nums[i],HIGH);
     }
   }
 }
