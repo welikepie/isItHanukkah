@@ -1,35 +1,43 @@
+
+struct __freelist
+{
+  size_t sz;
+  struct __freelist *nx;
+};
+
+extern struct __freelist *__flp;
+//extern uint8_t* __brkval;
+
 #include <aJSON.h>
 #include <avr/pgmspace.h>
 #include <SPI.h>
 #include <WiFi.h>
 
-
 boolean flicker = true;
 int blinkenLichten = 750;
 int nums[9] = {A0,A1,A2,A3,A4,A5,2,3,4}; //first element is always on. You've got to light the menora from something ;)
-char ssid[] = "Macs";
+char ssid[] = "Macs"; //WPA2 specific programming. Aww yiss.
 char pass[] = "!pandzior";
-int keyIndex = 0;            // your network key Index number (needed only for WEP)
-long interval = 100000; // interval at which to do something (milliseconds), 5 minutes in this case.
+char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
+
+uint8_t* __brkval;
+long interval = 10000; // interval at which to do something (milliseconds), 5 minutes in this case.
+long startTime = 0;
 int globalLights = -1;
 unsigned long previousMillis = 0; // last time update
 unsigned long currentMillis;
-
-char response[512];
-int index = 0;
-boolean overflowed = false;
-boolean alreadyCalled = false;
+String JSONstring;
+String responses = "";
+boolean beWrite = false;
 int status = WL_IDLE_STATUS;
-char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
-char* things = "{\"dayOf\":5,\"isHappening\":true}";
-// Initialize the Ethernet client library
-// with the IP address and port of the server 
-// that you want to connect to (port 80 is default for HTTP):
 WiFiClient client;
 boolean started = false;
-char *thing;
+String s= "{\"dayOf\":2,\"isHappening\":true}";
+boolean th;
+
 void setup() {
-  //setting all of our pins explicitly to outputs.
+  Serial.println("-=====-");
+//setting all of our pins explicitly to outputs.
   pinMode(nums[0], OUTPUT);
   pinMode(nums[1], OUTPUT);
   pinMode(nums[2], OUTPUT);
@@ -44,16 +52,17 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-    testObjects(things);
+
     // check for the presence of the shield:
-    if (WiFi.status() == WL_NO_SHIELD) {
-      Serial.println("WiFi shield not present. We need this to connect to our API server."); 
+ // echoStuff(s);  
+  if (WiFi.status() == WL_NO_SHIELD) {
+      Serial.println("WiFi shield not present. We need this to connect to our API server. We're stopping for now."); 
       // don't continue:
       while(true);
     } 
-  
+  Serial.println("After WiFi status");
   // attempt to connect to Wifi network:
-  while (status != WL_CONNECTED) { 
+  if (status != WL_CONNECTED) { 
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:    
@@ -68,83 +77,84 @@ void setup() {
 }
 
 void loop() {
-  if(started == false){
-    dialEmUp();
-    started = true;
+  if(started == false){ 
+	  dialEmUp();
+	startTime = millis();
+	Serial.println(startTime);
+	  started = true;
   }
 
-  currentMillis = millis(); //code block for timing between API calls to the server.
-  if(currentMillis - previousMillis > interval) {
+  currentMillis = millis() - startTime; //code block for timing between API calls to the server.
+  if((currentMillis - previousMillis) > interval) {
      previousMillis = currentMillis;  
      dialEmUp();
+  //echoStuff(s);  
   }
     lightEmUp(globalLights);
   // if there are incoming bytes available 
   // from the server, read them and write them to a char[]
-  
+ 
+
   while(client.available()) {
-    if(index < 511){
-    char c = client.read();
-      response[index] = c;
-      index++;      
-    }
-    else{
-      overflowed = true;
-    }
+	char c = client.read();
+    if(c =='{'){  
+		beWrite = true;
+	}
+	if(beWrite == true){
+	responses += c;
+      Serial.print(c);
+	}
+    if(c == '}'){
+		//client.flush();
+		//echoStuff(responses);
+	beWrite = false;
+	Serial.println(freeRam());
+	echoStuff(responses);
+	}
+   }  
+  if (!client.connected() ) {
+	  client.stop();
+	  responses = NULL;
   }
-  /*else if(!client.available() && index != 0){
-  echoStuff();
-  }*/
   
-  if (!client.connected()) {
-    client.stop();
-  }
 }
 
-void echoStuff(){
-int setInt = 0;
-String JSONstring = "";
-for(int i = 0; i < index; i++){  
+void echoStuff(String inputs){
+Serial.println("STARTING ECHO");
+  Serial.println(freeRam());
+JSONstring = "";
+  Serial.println(freeRam());
+//Serial.println(indexor);
+for(int i = 0; i < inputs.length(); i++){  
     //some rather dumb code to parse out one-tier JSON.
-    if( response[i] == '{'){
-      setInt = 1;
-    }
-  if(setInt>0){
-    Serial.print(response[i]);
-    if(response[i] == '"'){
-    JSONstring+="\\\"";
-    }
-    else if(response[i]=='\\'){
-    JSONstring+="\\\\";
+    //Serial.println(inputs[i]);
+	  Serial.println(freeRam());
+    if(inputs[i] == '"'){
+    //JSONstring+="\\\"";
+    JSONstring+='"';  
+	}
+    else if(inputs[i]=='\\'){
+//    JSONstring+="\\\\";
     }
     else{
-    JSONstring+= response[i];
+    JSONstring+= inputs[i];
     }
-  }
-  if( response[i] == '}'){
-  setInt = 0;
-  }
+  
 }
-Serial.print(JSONstring);
-Serial.print(JSONstring.equals("{\"dayOf\":5,\"isHappening\":true}"));
-char JSON[JSONstring.length()+1]; 
-JSONstring.toCharArray(JSON, JSONstring.length()+1);
-for(int i = 0; i < JSONstring.length(); i++){
-Serial.print(JSON[i]);
-}
-Serial.print("trying");
-//testObjects(JSON);
-testObjects();
 
-
-alreadyCalled = false;
-index = 0;
+//Serial.print("trying");
+testObjects(JSONstring, JSONstring.length());
+JSONstring = NULL;
 }
 
 void dialEmUp() {
+Serial.println("-----------------------------------");
+Serial.println(freeRam());
+Serial.println("-----------------------------------");
+if(client.connected()){
+  client.stop();
+ }
   if (client.connect(server, 80)) {
-    index = 0;
-    overflowed = false;
     Serial.println("connected to server"); 
     // Make a HTTP request:
     client.println("GET /isItHannukah/api/doTheyKnow/?forceDay=5 HTTP/1.1");
@@ -152,6 +162,10 @@ void dialEmUp() {
     client.println("Connection: close");
     client.println();
   }
+Serial.println("-----------------------------------");
+Serial.println(freeRam());
+Serial.println("-----------------------------------");
+
 }
 
 void printWifiStatus() {
@@ -171,50 +185,89 @@ void printWifiStatus() {
   Serial.println(" dBm");
 }
 
-void testObjects(char* input) {
-  Serial.print("STARTED FUNCTION BITCHES");
-   aJsonObject* root = aJson.parse(input);
+void testObjects(String input, int longness) {
+	Serial.println("++++++++++++++++++++++++");
+	  Serial.println(freeRam());
+aJsonObject* dayOf;
+aJsonObject* root;
+aJsonObject* name;
+char JSON[64];
+Serial.println("---");
+for(int i = 0; i < 64; i++){
+  JSON[i] = input.charAt(i);
+}
+  Serial.println("STARTED FUNCTION BITCHES");
+   root = aJson.parse(JSON);
+   //input is not what was expected and doesn't match input we would like.
   if(root == NULL){
-    testObjects(in);
+    Serial.println("recursive error!");
+//    testObjects(input);
   }
-  aJsonObject* name = aJson.getObjectItem(root, "isHappening");
+  else{
+name = aJson.getObjectItem(root, "isHappening");
   if (name != NULL) {
-    Serial.print("NOT NULL PARSING OF isHappening");
-    boolean th = name->valuebool;
+    th = name->valuebool;
+	Serial.println(th);
     if(th == 255 || th == 1 || th == true){
-      Serial.println("KICKING IT");
-       aJsonObject* dayOf = aJson.getObjectItem(root, "dayOf");
+       dayOf = aJson.getObjectItem(root, "dayOf");
         if (dayOf != NULL) {
           int th = dayOf->valueint;
-            globalLights = th;
-        }
-        aJson.deleteItem(dayOf);
-    }
-    else if(th == 0 || th == false){
-      Serial.println("KICKING OFF");
-    }
-  }   
-  aJson.deleteItem(root);
+		  //globalLights = 0;
+		  //globalLights = random(0,8);
+          globalLights = th;
+			Serial.println();
+			Serial.print(globalLights);
+			Serial.print(":");
+			Serial.print(th);
+	    }
+	    if(dayOf == NULL){
+			Serial.println("Some shit died.");
+		}
+//aJson.deleteItem(dayOf);
+    }else{Serial.println("ISNOT HANNUKAH");}
+//aJson.deleteItem(name);
+  }   else{Serial.println("ISDAY_IS_NULL");}
+//aJson.deleteItem(root);
+    Serial.println();
+	Serial.println(freeRam());
+  if(root != NULL){
+	aJson.deleteItem(root);
+  }
+  Serial.println();
+  Serial.println(freeRam());
+  Serial.println("De- Malloc'ed all the mems.");
+ }
 }
 
+int freeRam () 
+{
+  extern int __heap_start; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
+
 void lightEmUp(int lights){
-  if(lights>0){
+  if(lights>=0){
     if(lights >= 8){
       lights = 8;
     }
-    for(int i = 0; i <= lights; i++){
-      if(flicker!=false){
-        if(random(1000) > blinkenLichten){
-          digitalWrite(nums[i],HIGH);
-        }
-        else{
-          digitalWrite(nums[i],LOW);
-        }
-      }
-      else{
-          digitalWrite(nums[i],HIGH);
-      }
+    for(int i = 0; i <= 8; i++){
+		if(i <= lights){
+		  if(flicker==true){
+			if(random(1000) > blinkenLichten){
+			  digitalWrite(nums[i],HIGH);
+			}
+			else{
+			  digitalWrite(nums[i],LOW);
+			}
+		  }
+		  else{
+			  digitalWrite(nums[i],HIGH);
+		  }
+		}else{
+			digitalWrite(nums[i],LOW);
+		}
     }
   }
 }
-
