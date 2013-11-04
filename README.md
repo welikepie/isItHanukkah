@@ -1,5 +1,19 @@
 #Is It Hannukah?#
 
+#Arduino Implementation#
+##What is it?##
+This is a sketch which needs the arduino Wi-Fi shield to function. It also needs LED lights wired up to the outputs as denoted by the nums[] array.
+
+Once the Arduino is wired up, the malloc.c file in the Arduino compiler needs to be replaced, owing to a memory allocation bug in the compiler.
+What this means in a practical sense is that your program will stop running without this modification after a relatively short period of time.
+
+To replace the malloc.c file, locate your arduino installation directory and replace the malloc.c file. In addition to adding the malloc.c file,
+the aJSON zipped file needs to be installed to your Arduino compiler.
+
+Once this has been done, then the .ino file in the arduino folder can be uploaded to the board using a compiler of choice. Once the board has been
+ primed with the code, it is a case of powering the board up for a joyfully created menorah.
+
+#API#
 ##What is it?##
 This is an API to determine whether it is Hanukkah, and what day of Hannukah we currently find ourselves in.
 Additionally, there is also code to determine whether the sun is down at a particular latitude/longitude pairing as well as whether the sun is up.
