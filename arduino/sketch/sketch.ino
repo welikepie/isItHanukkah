@@ -18,10 +18,10 @@ boolean flicker = true; //Boolean as to whether the lights should flicker
 int nums[9] = {A0,A1,A2,A3,A4,A5,2,3,4}; //first element is always on. You've got to light the menora from something ;)
 char ssid[] = ""; //WPA specific programming. Aww yiss.
 char pass[] = "";//WPA password
-long interval = 600000; // interval at which to check the server (milliseconds), 10 minutes in this case.
+long interval = 300000; // interval at which to check the server (milliseconds), 5 minutes in this case.
 boolean goOutBool = true; //boolean as to whether the lights should turn off.
 long goOutTime = 21600000; // turns itself off after 6 hours.
-String apiRequest = "doTheyKnow/?forceDay=5"; //API call. Debug call to light up all of the menorah!
+String apiRequest = "doTheyKnow/?forceDay=4"; //API call. Debug call to light up all of the menorah! Leave the /? in, even if not adding any specific options.
 
 uint8_t* __brkval;
 char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
@@ -112,6 +112,7 @@ void loop() {
 		//client.flush();
 	beWrite = false;
 	//Serial.println(freeRam());
+	Serial.println(responses);
 	testObjects(responses, responses.length());
 	}
    }  
@@ -200,11 +201,17 @@ name = aJson.getObjectItem(root, "isHappening");
 			Serial.println("The parsing couldn't happen. Are you running out of memory?");
 		}
     }else{
-		Serial.println("Isn't Hannukah yet!");}
+		Serial.println("Isn't Hannukah yet!");
+		globalLights = -1;
+
+	}
   }   else{Serial.println("Parsing out the day of Hannukah failed. Are you running out memory?");}
 //	Serial.println(freeRam());
   if(root != NULL){
 	aJson.deleteItem(root);
+	for(int i = 0; i <= 8; i++){//cycle through light
+		digitalWrite(nums[i],LOW);
+	}
   }
  // Serial.println();
  // Serial.println(freeRam());
@@ -247,6 +254,7 @@ void lightEmUp(int lights){ //LIGHTS!
 	}
 	else{ //if supposed to fade out
 	if(blinkenLichten < 1000){++blinkenLichten;} //increment temporary variable
+	if(globalLights<8){
 	if(flicker==true){ //flickering for the Shamash (always on)
 		if(random(1000) > blinkingProbability){
 		  digitalWrite(nums[0],HIGH);
@@ -275,6 +283,26 @@ void lightEmUp(int lights){ //LIGHTS!
 				digitalWrite(nums[i],LOW);
 			}
 		}
+	}
+	else{
+	for(int i = 0; i <= 8; i++){
+			if(i <= lights){
+			  if(flicker==true){
+				if(random(1000) > blinkenLichten){
+				  digitalWrite(nums[i],HIGH);
+				}
+				else{
+				  digitalWrite(nums[i],LOW);
+				}
+			  }
+			  else{
+				  digitalWrite(nums[i],LOW);//and the lights set to off if it isn't flickering. 
+			  }
+			}else{
+				digitalWrite(nums[i],LOW);
+			}
+		}
+	}
 	}
   }
 }

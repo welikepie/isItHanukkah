@@ -8,17 +8,13 @@ $monthStart="Kislev";
 $responseArr=array();
 $latitude=51.5072;
 $longitude=0.1275;
-
+$jewishDate;
 //DoTheyKnow() //returns base with day of hannukah assuming london,england as a base point. No sunset information.
 //DoTheyKnow(lat,lon) //returns sunset information with day of hannukah etc.
 //IsSunSet()
 //IsSunSet(lat,lon);
 if(isHannukah($arr)===true) {
 	if($responseArr["isHappening"]===true) {
-		if(key_exists("lat",$arr)&&key_exists("lon",$arr)) {
-			$latitude=$arr["lat"];
-			$longitude=$arr["lon"];
-		}
 			//if the functions don't seem to be working at all / spitting out the wrong times, try comparing the time echo'ed below to the sunset time listed in the foreach statement.
 			//if they're vaguely similar then yeah, stuff's working fine.
 			//echo date("D M d Y"). ', sunset time : ' .date_sunset(time(), SUNFUNCS_RET_STRING, $latitude, $longitude ,90, 1);
@@ -26,7 +22,7 @@ if(isHannukah($arr)===true) {
 		if ($info["sunrise"] == 0 && $info["sunset"] == 0 || $info["sunrise"] == 1 && $info["sunset"] == 1) {
 			$info=date_sun_info(strtotime('today midnight'),$latitude,$longitude);
 		}
-		if($info["nautical_twilight_end"]<=time() && !key_exists("forceDay",$responseArr)) {
+		if($info["nautical_twilight_end"]<=time() && !key_exists("forceDay",$arr)) {
 			$responseArr["dayOf"]=++$responseArr["dayOf"];
 		}
 /*echo($info["nautical_twilight_end"] .":". time());
@@ -56,15 +52,27 @@ function isHannukah($arr) {
 		global $monthStart;
 		global $dayStart;
 		global $seconds_in_day;
-		$jewishDate=cal_from_jd(unixtojd(),CAL_JEWISH);
-		/*foreach($jewishDate as $key=>$value){
-		 echo($key.":".$value."<br>");
-		 }
-		 echo("<br>");*/
+		global $latitude;
+		global $longitude;
+		global $jewishDate;
+		$toAdd = 0;
+		if(key_exists("lat",$arr)&&key_exists("lon",$arr)) {
+			$latitude=$arr["lat"];
+			$longitude=$arr["lon"];
+		}
+		
+		$info=date_sun_info(time(),$latitude,$longitude);
+		if ($info["sunrise"] != 0 && $info["sunset"] != 0 && $info["sunrise"] != 1 && $info["sunset"] != 1) {
+		$toAdd = (ceil(($info["civil_twilight_end"]/86400))*86400)-$info["civil_twilight_end"];		
+		}
+//		$toAdd+=3600;
+		$jewishDate=cal_from_jd(unixtojd(time()+$toAdd),CAL_JEWISH);
+		//var_dump( date("F j, Y, g:i a",time()+$toAdd));
+		//var_dump($jewishDate);
 		for($i=0;$i<8;$i++) {
-			$cals=cal_from_jd(unixtojd(time()-$seconds_in_day*$i),CAL_JEWISH);
+			$cals=cal_from_jd(unixtojd((time()+$toAdd)-($seconds_in_day*$i)),CAL_JEWISH);
 			if($cals["monthname"]==$monthStart&&$cals["day"]==$dayStart) {
-				$responseArr["dayOf"]=$i+1;
+				$responseArr["dayOf"]=$i;
 			}
 		}
 		if(key_exists("dayOf",$responseArr)) {
@@ -82,7 +90,7 @@ function printOut() {
 		if(array_key_exists('callback', $_GET)){
 	
 	    header('Content-Type: text/javascript; charset=utf8');
-	    header('Access-Control-Allow-Origin: http://www.example.com/');
+	    header('Access-Control-Allow-Origin: *');
 	    header('Access-Control-Max-Age: 3628800');
 	    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 	
