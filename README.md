@@ -1,17 +1,74 @@
 #Is It Hannukah?#
 
 #Arduino Implementation#
+
 ##What is it?##
-This is a sketch which needs the arduino Wi-Fi shield to function. It also needs LED lights wired up to the outputs as denoted by the nums[] array.
+An Arduino sketch which turns your arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah. 
+To run this sketch, internet conenctivity is required. The .ino file caters to a WiFi shield being used, but could also be re-written to use the Ethernet shield instead.
 
-Once the Arduino is wired up, the malloc.c file in the Arduino compiler needs to be replaced, owing to a memory allocation bug in the compiler.
-What this means in a practical sense is that your program will stop running without this modification after a relatively short period of time.
+##How do I get it working?##
+To get the sketch up and running, you will need a version of the Arduino IDE that supports the WiFi shield.
 
-To replace the malloc.c file, locate your arduino installation directory and replace the malloc.c file. In addition to adding the malloc.c file,
-the aJSON zipped file needs to be installed to your Arduino compiler.
+Once the Arduino IDE is running, we need to replace a file to fix a bug in the memory management code included with the IDE.
 
-Once this has been done, then the .ino file in the arduino folder can be uploaded to the board using a compiler of choice. Once the board has been
- primed with the code, it is a case of powering the board up for a joyfully created menorah.
+###Replacing the malloc.c file###
+Malloc.c is the file which governs the memory management in the Arduino core. As the program this code was sourced from was patched after it was included 
+with Arduino, we need to include this patched code.
+
+The way we do this is by first finding where the malloc.c file lives in the Arduino folder. 
+
+On windows, this will be the directory you installed Arduino to, usually Program Files(x86)/Arduino, with the filepath hardware/arduino/cores/arduino/avr-libc relative from that point.
+
+On mac, this will usually be the Applications folder. We then need to right click on the Arduino install, and select "Show package contents". From this point, the filepath is /Contents/Resources/Java/hardware/arduino/cores/arduino/avr-libc.
+
+Having now found malloc.c, we need to replace it with the malloc.c file found in the arduino folder of the repository.
+
+###Outputs for lights###
+As the code stands at the time of commit, the outputs are as follows;
+- A0 is the output for the Shamash (The candle that's always on during Hannukah)
+- A1 is the output for the candle lit on the first day of Hannukah
+- A2 is the output for the candle lit on the second day of Hannukah
+- A3 is the output for the candle lit on the third day of Hannukah
+- A4 is the output for the candle lit on the fourth day of Hannukah
+- A5 is the output for the candle lit on the fifth day of Hannukah
+- 2 is the output for the candle lit on the sixth day of Hannukah
+- 3 is the output for the candle lit on the seventh day of Hannukah
+- 4 is the output for the candle lit on the eighth day of Hannukah
+
+As the wiring of the circuit is dependant on what you wish to achieve, that is left as an exercise to the reader.
+
+###Installing the aJson library###
+
+To install the aJson library (and indeed any other library), there is a guide written by the Arduino team [at this site.](http://arduino.cc/en/Guide/Libraries)
+The files for the library are contained in the aJson-master.zip file which is contained in the arduino folder of the repository.
+
+###Running the Sketch###
+
+Now we have patched the IDE and imported the libraries, The sketch.ino file contains the code necessary for the Menorah. What we do then, is load the sketch.ino file, 
+which is found in the arduino/sketch/Visual Micro folder in to the Arduino IDE. Note that the repository also includes a Visual Micro project (for use with Visual Studio). 
+Independant on the method of opening the sketch, the previous patching and imported libraries will still take effect.
+
+Upon opening the sketch, there are some configuring steps which need to take place for the menorah.
+
+- The "flicker" boolean is used to determine of the output produces a flickering effect or not.
+- The "blinkenlichten" integer determines how many times, out of 1000, the output is set to off.
+- The "interval" integer determines after how many milliseconds the API is re-polled. Every ten minutes works rather well. Under every 10 seconds chokes the arduino up.
+- The "goOutBool" boolean determines if the lights are supposed to go out or not. Set to true to have them go out, false to stay lit.
+- The "goOutTime" integer determines after how many milliseconds the lights should go out, if they should go out.
+- [MANDATORY] the ssid[] is where you need to write your wireless network ID.
+- [MANDATORY] the pass[] is where you need to set the password for your wireless network.
+
+With the sketch opened and configured, we can now upload it to the board and watch things happen.
+
+**Note: **If the sketch refuses to connect to the router, it is possible your WiFi shield has outdated firmware, which will need updating.
+This is easiest done using a Mac and the instructions prepared by the Arduino folks over at [This site](http://arduino.cc/en/Hacking/WiFiShieldFirmwareUpgrading).
+Carrying out the update of the board is left as an exercise for the reader.
+
+###Expected Behaviour###
+
+If it isn't Hannukah, none of the outputs will function.
+If it is the first day of Hannukah, the Shamash output and the first output should have output.
+If it is the nth day of Hannukah, the Shamash output and the nth output should have output.
 
 #API#
 ##What is it?##

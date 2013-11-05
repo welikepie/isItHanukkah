@@ -18,11 +18,13 @@ int blinkenLichten = 750;
 int nums[9] = {A0,A1,A2,A3,A4,A5,2,3,4}; //first element is always on. You've got to light the menora from something ;)
 char ssid[] = "Macs"; //WPA2 specific programming. Aww yiss.
 char pass[] = "!pandzior";
-char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
-
-uint8_t* __brkval;
 long interval = 600000; // interval at which to do something (milliseconds), 5 minutes in this case.
-long goOutTime = 2160000000;
+boolean goOutBool = true;
+//long goOutTime = 2160000000;
+long goOutTime = 1000;
+
+char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
+uint8_t* __brkval;
 //long goOutStart = 0;
 long startTime = 0;
 int globalLights = -1;
@@ -160,6 +162,7 @@ if(client.connected()){
     Serial.println("connected to server"); 
     // Make a HTTP request:
     client.println("GET /isItHannukah/api/doTheyKnow/?forceDay=8 HTTP/1.1");
+    // forces the day to return as the eighth day of hannukah.
     client.println("Host: dev.welikepie.com");
     client.println("Connection: close");
     client.println();
