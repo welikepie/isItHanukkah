@@ -13,19 +13,20 @@ extern struct __freelist *__flp;
 #include <SPI.h>
 #include <WiFi.h>
 
-boolean flicker = true;
-int blinkenLichten = 750;
+int blinkingProbability = 750;//probability as to how many times per thousand checks the lights should stay off.
+boolean flicker = true; //Boolean as to whether the lights should flicker
 int nums[9] = {A0,A1,A2,A3,A4,A5,2,3,4}; //first element is always on. You've got to light the menora from something ;)
-char ssid[] = "Macs"; //WPA2 specific programming. Aww yiss.
-char pass[] = "!pandzior";
-long interval = 600000; // interval at which to do something (milliseconds), 5 minutes in this case.
-boolean goOutBool = true;
-//long goOutTime = 2160000000;
-long goOutTime = 1000;
+char ssid[] = ""; //WPA specific programming. Aww yiss.
+char pass[] = "";//WPA password
+long interval = 600000; // interval at which to check the server (milliseconds), 10 minutes in this case.
+boolean goOutBool = true; //boolean as to whether the lights should turn off.
+long goOutTime = 21600000; // turns itself off after 6 hours.
+String apiRequest = "doTheyKnow/?forceDay=5"; //API call. Debug call to light up all of the menorah!
 
-char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
 uint8_t* __brkval;
-//long goOutStart = 0;
+char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
+int blinkenLichten = blinkingProbability;
+long goOutStart = 0;
 long startTime = 0;
 int globalLights = -1;
 unsigned long previousMillis = 0; // last time update
@@ -36,7 +37,6 @@ boolean beWrite = false;
 int status = WL_IDLE_STATUS;
 WiFiClient client;
 boolean started = false;
-String s= "{\"dayOf\":2,\"isHappening\":true}";
 boolean th;
 
 void setup() {
@@ -51,14 +51,13 @@ void setup() {
   pinMode(nums[6], OUTPUT);
   pinMode(nums[7], OUTPUT);
   pinMode(nums[8], OUTPUT);
-  //Initialize serial and wait for port to open:
+  //Initialize Serial and wait for port to open:
   Serial.begin(9600); 
   while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
+    ; // wait for Serial port to connect. Needed for Leonardo only
   }
 
     // check for the presence of the shield:
- // echoStuff(s);  
   if (WiFi.status() == WL_NO_SHIELD) {
       Serial.println("WiFi shield not present. We need this to connect to our API server. We're stopping for now."); 
       // don't continue:
@@ -76,29 +75,30 @@ void setup() {
   } 
   Serial.println("Connected to wifi");
   printWifiStatus();
-  
-  // if you get a connection, report back via serial:
+  // if you get a connection, report back via Serial:
 }
 
 void loop() {
-  if(started == false){ 
+  if(started == false){
+	  //getting the time that loop() started at. This becomes important for timing our code execution.
 	  dialEmUp();
-	startTime = millis();
-	Serial.println(startTime);
+	  startTime = millis();
+	//Serial.println(startTime);
 	  started = true;
   }
 
   currentMillis = millis() - startTime; //code block for timing between API calls to the server.
   if((currentMillis - previousMillis) > interval) {
      previousMillis = currentMillis;  
-     dialEmUp();
-  //echoStuff(s);  
+     dialEmUp(); //function call if the interval has passed.
   }
-    lightEmUp(globalLights);
+    lightEmUp(globalLights);//call lights function with globally set globalLights integer
+
+
   // if there are incoming bytes available 
   // from the server, read them and write them to a char[]
- 
-
+  // We start parsing on a { character and stop parsing on a } 
+  // character. Very simple, 1D JSON parsing.
   while(client.available()) {
 	char c = client.read();
     if(c =='{'){  
@@ -106,70 +106,41 @@ void loop() {
 	}
 	if(beWrite == true){
 	responses += c;
-      Serial.print(c);
+      //Serial.print(c);
 	}
     if(c == '}'){
 		//client.flush();
-		//echoStuff(responses);
 	beWrite = false;
-	Serial.println(freeRam());
-	echoStuff(responses);
+	//Serial.println(freeRam());
+	testObjects(responses, responses.length());
 	}
    }  
   if (!client.connected() ) {
-	  client.stop();
-	  responses = NULL;
+	  client.stop(); //stop client if there's no more data
+	  responses = NULL; //clear the memory, always clear the memory.
   }
   
 }
 
-void echoStuff(String inputs){
-Serial.println("STARTING ECHO");
-  Serial.println(freeRam());
-JSONstring = "";
-  Serial.println(freeRam());
-//Serial.println(indexor);
-for(int i = 0; i < inputs.length(); i++){  
-    //some rather dumb code to parse out one-tier JSON.
-    //Serial.println(inputs[i]);
-	  Serial.println(freeRam());
-    if(inputs[i] == '"'){
-    //JSONstring+="\\\"";
-    JSONstring+='"';  
-	}
-    else if(inputs[i]=='\\'){
-//    JSONstring+="\\\\";
-    }
-    else{
-    JSONstring+= inputs[i];
-    }
-  
-}
-
-//Serial.print("trying");
-testObjects(JSONstring, JSONstring.length());
-JSONstring = NULL;
-}
-
 void dialEmUp() {
-Serial.println("-----------------------------------");
-Serial.println(freeRam());
-Serial.println("-----------------------------------");
+//Serial.println("-----------------------------------");
+//Serial.println(freeRam());
+//Serial.println("-----------------------------------");
 if(client.connected()){
   client.stop();
  }
   if (client.connect(server, 80)) {
-    Serial.println("connected to server"); 
+    Serial.println("connected to server and carrying out API request."); 
     // Make a HTTP request:
-    client.println("GET /isItHannukah/api/doTheyKnow/?forceDay=8 HTTP/1.1");
+    client.println("GET /isItHannukah/api/"+apiRequest+" HTTP/1.1");
     // forces the day to return as the eighth day of hannukah.
     client.println("Host: dev.welikepie.com");
     client.println("Connection: close");
     client.println();
   }
-Serial.println("-----------------------------------");
-Serial.println(freeRam());
-Serial.println("-----------------------------------");
+//Serial.println("-----------------------------------");
+//Serial.println(freeRam());
+//Serial.println("-----------------------------------");
 
 }
 
@@ -191,60 +162,57 @@ void printWifiStatus() {
 }
 
 void testObjects(String input, int longness) {
-	Serial.println("++++++++++++++++++++++++");
-	  Serial.println(freeRam());
+	//Serial.println("++++++++++++++++++++++++");
+	  //Serial.println(freeRam());
 aJsonObject* dayOf;
 aJsonObject* root;
 aJsonObject* name;
-char JSON[64];
-Serial.println("---");
-for(int i = 0; i < 64; i++){
-  JSON[i] = input.charAt(i);
+char JSON[128];
+//Serial.println("---");
+for(int i = 0; i < 128; i++){ //128 characters are enough for the JSON object string ... right?
+ JSON[i] = input.charAt(i);
 }
-  Serial.println("STARTED FUNCTION BITCHES");
+
+  //Serial.println("Started Parsing Function");
    root = aJson.parse(JSON);
    //input is not what was expected and doesn't match input we would like.
   if(root == NULL){
-    Serial.println("recursive error!");
+    Serial.println("Error in the input! Ruh Roh Shaggy! You could be out of memory.");
 //    testObjects(input);
   }
   else{
 name = aJson.getObjectItem(root, "isHappening");
-  if (name != NULL) {
+  if (name != NULL) { //retrieve whether it is Hannukah or not according to the API
     th = name->valuebool;
-	Serial.println(th);
-    if(th == 255 || th == 1 || th == true){
-       dayOf = aJson.getObjectItem(root, "dayOf");
-        if (dayOf != NULL) {
-          int th = dayOf->valueint;
-		  //globalLights = 0;
-		  //globalLights = random(0,8);
-          globalLights = th;
-			Serial.println();
-			Serial.print(globalLights);
-			Serial.print(":");
-			Serial.print(th);
+	//Serial.println(th);
+    if(th == 255 || th == 1 || th == true){ //if true...
+       dayOf = aJson.getObjectItem(root, "dayOf"); //get the dayOf attribute from the JSON
+        if (dayOf != NULL) { //if it isn't null (i.e. we've ran out of memory)...
+          int th = dayOf->valueint; //..get the value...
+		  if(goOutBool == true){ //..and check if the lights are supposed to go out...
+			  if(globalLights!=th){//..if they are...
+				goOutStart = millis(); //..start a number to count from
+			  }
+		  }
+          globalLights = th; //..set the global lights ammount to the ammount from the API
 	    }
 	    if(dayOf == NULL){
-			Serial.println("Some shit died.");
+			Serial.println("The parsing couldn't happen. Are you running out of memory?");
 		}
-//aJson.deleteItem(dayOf);
-    }else{Serial.println("ISNOT HANNUKAH");}
-//aJson.deleteItem(name);
-  }   else{Serial.println("ISDAY_IS_NULL");}
-//aJson.deleteItem(root);
-    Serial.println();
-	Serial.println(freeRam());
+    }else{
+		Serial.println("Isn't Hannukah yet!");}
+  }   else{Serial.println("Parsing out the day of Hannukah failed. Are you running out memory?");}
+//	Serial.println(freeRam());
   if(root != NULL){
 	aJson.deleteItem(root);
   }
-  Serial.println();
-  Serial.println(freeRam());
-  Serial.println("De- Malloc'ed all the mems.");
+ // Serial.println();
+ // Serial.println(freeRam());
+ // Serial.println("De- Malloc'ed all the mems.");
  }
 }
 
-int freeRam () 
+int freeRam ()  //function for checking free ram
 {
   extern int __heap_start; 
   int v; 
@@ -252,27 +220,61 @@ int freeRam ()
 }
 
 
-void lightEmUp(int lights){
-  if(lights>=0){
+void lightEmUp(int lights){ //LIGHTS!
+  if(lights>=0){ //if number passed in is greater than eight set to eight.
     if(lights >= 8){
       lights = 8;
     }
-    for(int i = 0; i <= 8; i++){
-		if(i <= lights){
-		  if(flicker==true){
-			if(random(1000) > blinkenLichten){
-			  digitalWrite(nums[i],HIGH);
+	if((millis() - goOutStart) <= goOutTime || goOutBool == false){ //check if lights shouldn't go out (or choice for them to go out is disabled)
+	if(blinkenLichten > blinkingProbability){--blinkenLichten;}
+		for(int i = 0; i <= 8; i++){//cycle through lights
+			if(i <= lights){		//if I less than | equal to lights
+			  if(flicker==true){	//if flicker is true
+				if(random(1000) > blinkenLichten){ //random percentage to flicker on
+				  digitalWrite(nums[i],HIGH); //ON!
+				}
+				else{
+				  digitalWrite(nums[i],LOW); //OFF!
+				}
+			  }
+			  else{
+				  digitalWrite(nums[i],HIGH); //if no flicker, on
+			  }
+			}else{ //if not part of lights, turn off.
+				digitalWrite(nums[i],LOW);
 			}
-			else{
-			  digitalWrite(nums[i],LOW);
-			}
-		  }
-		  else{
-			  digitalWrite(nums[i],HIGH);
-		  }
-		}else{
-			digitalWrite(nums[i],LOW);
 		}
-    }
+	}
+	else{ //if supposed to fade out
+	if(blinkenLichten < 1000){++blinkenLichten;} //increment temporary variable
+	if(flicker==true){ //flickering for the Shamash (always on)
+		if(random(1000) > blinkingProbability){
+		  digitalWrite(nums[0],HIGH);
+		}
+		else{
+		  digitalWrite(nums[0],LOW);
+		}
+	  }
+    else{
+	  digitalWrite(nums[0],HIGH);
+	 }	//same as the fade in code, except the variable used to determine if on or off is incremented towards its maximum
+		for(int i = 1; i <= 8; i++){
+			if(i <= lights){
+			  if(flicker==true){
+				if(random(1000) > blinkenLichten){
+				  digitalWrite(nums[i],HIGH);
+				}
+				else{
+				  digitalWrite(nums[i],LOW);
+				}
+			  }
+			  else{
+				  digitalWrite(nums[i],LOW);//and the lights set to off if it isn't flickering. 
+			  }
+			}else{
+				digitalWrite(nums[i],LOW);
+			}
+		}
+	}
   }
 }

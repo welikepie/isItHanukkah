@@ -32,7 +32,6 @@ extern "C" void __cxa_pure_virtual() {;}
 
 //
 //
-void echoStuff(String inputs);
 void dialEmUp();
 void printWifiStatus();
 void testObjects(String input, int longness);

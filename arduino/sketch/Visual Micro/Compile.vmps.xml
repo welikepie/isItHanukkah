@@ -9,24 +9,24 @@
       <VCCodeMacros />
     </VCCodeModel>
     <BreakPoints>
-      <BreakPoint Index="1" Name="sketch.ino, line 79" Id="bdf37dc6-2426-4b9d-9fae-a3e4be362d67" Enabled="1" Message="{millis()}" MessageTextType="2" PreProcessedMessage="{0}" Condition="millis()&gt;0 || millis()&gt;1" ConditionType="1" CurrentHits="0" File="c:\xampp\htdocs\aptana\isithannukah\arduino\sketch\sketch.ino" FileLine="79" FileColumn="1" FunctionName="" FunctionLineOffset="1" FunctionColumnOffset="1" HitCountTarget="250" HitCountType="4" Language="C++" LocationType="3" Tag="&lt;vmbp Id='bdf37dc6-2426-4b9d-9fae-a3e4be362d67'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="1">
-        <Source>72	  } 
-73	  Serial.println("Connected to wifi");
-74	  printWifiStatus();
-75	  
-76	  // if you get a connection, report back via serial:
-77	}
-78	
---&gt;79	void loop() {
-80	  if(started == false){ 
-81		  dialEmUp();
-82		startTime = millis();
-83		Serial.println(startTime);
-84		  started = true;
-85	  }
-86	
-87	  currentMillis = millis() - startTime; //code block for timing between API calls to the server.
-88	  if((currentMillis - previousMillis) &gt; interval) {
+      <BreakPoint Index="1" Name="sketch.ino, line 83" Id="b298b2a0-9eab-4545-bc77-80a546ada805" Enabled="1" Message="{millis()}" MessageTextType="2" PreProcessedMessage="{0}" Condition="millis()&gt;0 || millis()&gt;1" ConditionType="1" CurrentHits="0" File="c:\xampp\htdocs\aptana\isithannukah\arduino\sketch\sketch.ino" FileLine="83" FileColumn="1" FunctionName="" FunctionLineOffset="1" FunctionColumnOffset="1" HitCountTarget="250" HitCountType="4" Language="C++" LocationType="3" Tag="&lt;vmbp Id='b298b2a0-9eab-4545-bc77-80a546ada805'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="1">
+        <Source>76	    delay(10000);
+77	  } 
+78	  Serial.println("Connected to wifi");
+79	  printWifiStatus();
+80	  // if you get a connection, report back via Serial:
+81	}
+82	
+--&gt;83	void loop() {
+84	  if(started == false){
+85		  //getting the time that loop() started at. This becomes important for timing our code execution.
+86		  dialEmUp();
+87		  startTime = millis();
+88		//Serial.println(startTime);
+89		  started = true;
+90	  }
+91	
+92	  currentMillis = millis() - startTime; //code block for timing between API calls to the server.
 </Source>
         <MessageVariables>
           <MessageVariable Name="millis()" Index="1" />

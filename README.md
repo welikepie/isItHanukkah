@@ -1,5 +1,13 @@
 #Is It Hannukah?#
 
+##What is it?##
+
+Is It Hannukah is a project consisting of a backend API and an arduino project, with the sole intention of developing a Menorah using the web.
+
+The backend API is RESTful with three seperate endpoints at current, written in PHP, documented further down this document.
+
+The Arduino portion is a sketch.ino file which lets the end user create their own menorah by providing the middleman between their circuits and the IsItHannukah API (some setup required).
+
 #Arduino Implementation#
 
 ##What is it?##
@@ -57,12 +65,13 @@ Upon opening the sketch, there are some configuring steps which need to take pla
 - The "goOutTime" integer determines after how many milliseconds the lights should go out, if they should go out.
 - [MANDATORY] the ssid[] is where you need to write your wireless network ID.
 - [MANDATORY] the pass[] is where you need to set the password for your wireless network.
+- [MANDATORY] the apiRequest is where you make you API request to the server. As of current, the only endpoint supported is the doTheyKnow endpoint.
 
 With the sketch opened and configured, we can now upload it to the board and watch things happen.
 
-**Note: **If the sketch refuses to connect to the router, it is possible your WiFi shield has outdated firmware, which will need updating.
-This is easiest done using a Mac and the instructions prepared by the Arduino folks over at [This site](http://arduino.cc/en/Hacking/WiFiShieldFirmwareUpgrading).
-Carrying out the update of the board is left as an exercise for the reader.
+*Note: If the sketch refuses to connect to the router, it is possible your WiFi shield has outdated firmware, which will need updating.
+This is easiest done using a Mac and the instructions prepared by the Arduino folks over at [this site](http://arduino.cc/en/Hacking/WiFiShieldFirmwareUpgrading).
+Carrying out the update of the board is left as an exercise for the reader.*
 
 ###Expected Behaviour###
 

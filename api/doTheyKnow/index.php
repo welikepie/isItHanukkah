@@ -26,7 +26,7 @@ if(isHannukah($arr)===true) {
 		if ($info["sunrise"] == 0 && $info["sunset"] == 0 || $info["sunrise"] == 1 && $info["sunset"] == 1) {
 			$info=date_sun_info(strtotime('today midnight'),$latitude,$longitude);
 		}
-		if($info["nautical_twilight_end"]<=time()) {
+		if($info["nautical_twilight_end"]<=time() && !key_exists("forceDay",$responseArr)) {
 			$responseArr["dayOf"]=++$responseArr["dayOf"];
 		}
 /*echo($info["nautical_twilight_end"] .":". time());
@@ -45,7 +45,6 @@ if(isHannukah($arr)===true) {
 
 function isHannukah($arr) {
 		global $responseArr;
-
 	if(key_exists("forceDay", $arr)){
 		if(intval($arr["forceDay"],10) > 8){
 			$arr["forceDay"] = 8;
