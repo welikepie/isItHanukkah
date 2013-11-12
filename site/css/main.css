@@ -15,6 +15,10 @@ body {
     line-height: 1.4;
 }
 
+h1, h2, h3, h4 {
+    font-family: "Lato", Helvetica, sans-serif;
+}
+
 ::-moz-selection {
     background: #b3d4fc;
     text-shadow: none;
@@ -69,11 +73,6 @@ textarea {
     ALL: Orange Theme
    =================== */
 
-.footer-container,
-.main aside {
-    border-top: 10px solid #468fda;
-}
-
 .header-container,
 .footer-container,
 .main aside {
@@ -86,7 +85,7 @@ textarea {
 
 .title {
     color: white;
-    font-family: "Lato", sans-serif;
+    font-family: "Lato", Helvetica, sans-serif;
     font-size: 4em;
 }
 
@@ -95,7 +94,7 @@ textarea {
    ============== */
 
 nav ul {
-    margin: 0;
+    margin: 20px 0 0 42px;
     padding: 0;
 }
 
@@ -127,7 +126,7 @@ nav a:hover {
 
 .main aside {
     color: white;
-    padding: 0px 5% 10px;
+    padding: 0px 20px 0px;
     margin-top: 30px;
 }
 
@@ -159,9 +158,11 @@ code {
     color: #555;
     font-size: 14px;
     }
+
 pre code {
     line-height: 1.6em;
     }
+
 pre {
     padding: 0.1em 0.5em 0.3em 1.2em;
     border-left: 11px solid rgba(70, 143, 218, 0.5);
@@ -183,6 +184,10 @@ pre {
 
 .footer-container a:hover {
     text-decoration: underline;
+}
+
+iframe {
+    min-height: 55%;
 }
 
 /* ==========================================================================
@@ -211,6 +216,13 @@ pre {
 
     .title {
         text-align: center;
+    }
+    
+    .main aside {
+    color: white;
+    padding: 0px 20px 0px;
+    margin-top: 30px;
+    width: 65%;
     }
 
 /* ========================
@@ -247,12 +259,12 @@ pre {
 
     .main article {
         float: left;
-        width: 57%;
+        width: 52%;
     }
 
     .main aside {
         float: right;
-        width: 28%;
+        width: 31%;
     }
 }
 
