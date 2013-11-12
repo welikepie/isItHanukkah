@@ -102,6 +102,10 @@ Additionally, there is also code to determine whether the sun is down at a parti
 
 Sending a GET request to the endpoints with the parameters specified as a query string will yield the response to the query.
 
+##API Base URL##
+
+At the time of publication, the base URL for the API is http://dev.welikepie.com/isItHannukah . All API endpoints can be appended to this baseURL to produce a call.
+
 ##Function List;##
 
 	doTheyKnow
@@ -114,18 +118,17 @@ Sending a GET request to the endpoints with the parameters specified as a query 
 End point: /api/doTheyKnow/index.php
 	
 	Functions:
-		doTheyKnow()
-		doTheyKnow(float lat, float lon)
-		doTheyKnow(int forceDay)
-
-Overloaded endpoint.
+		doTheyKnow()  -  /api/doTheyKnow/index.php
+		doTheyKnow(float lat, float lon)  -  /api/doTheyKnow/index.php?lat=31&lon=32
+		doTheyKnow(int forceDay)  -  /api/doTheyKnow/index.php?forceDay=5
  
-In its instance of taking no arguments, it returns whether it is Hannukah or not in London, England.
-In its instance of taking two arguments, it returns whether it is Hannukah or not at whatever latitude (lat) and longitude (lon) are provided.
-In its instance of taking one argument, it returns as if Hannukah is happening on the day specified by the forceDay parameter.
+- In its instance of taking no arguments, it returns whether it is Hannukah or not in London, England.
+- In its instance of taking two arguments, it returns whether it is Hannukah or not at whatever latitude (lat) and longitude (lon) are provided.
+- In its instance of taking one argument, it returns as if Hannukah is happening on the day specified by the forceDay parameter.
 
-Returned object has the attribute of "isHappening" regardless, with true marking it is hannukah, and false marking it as not being Hannukah.
-If isHappning is true, the "dayOf" attribute will be set to the current day of Hannukah. 
+Returned object has the attribute of "isHappening" regardless, with "true" marking it is hannukah, and "false" marking it as not being Hannukah.
+If isHappening is true, the "dayOf" attribute will be set to the current day of Hannukah.
+
 Example;
 
 	During Hannukah;
@@ -145,12 +148,11 @@ Example;
 End point: /api/isSundown/index.php
 
 	Functions;
-		isSundown()
-		isSundown(float lat, float lon)
+		isSundown()  -  /api/isSundown/index.php
+		isSundown(float lat, float lon)  -  /api/isSundown/index.php?lat=31&lon=32
 
-Overloaded endpoint.
-In its instance of taking no arguments, it returns an object specifying whether the sun has set in London, England.
-In its instance of taking no arguments, it returns an object specifying whether the sun has set at the provided latitude and longitude.
+- In its instance of taking no arguments, it returns an object specifying whether the sun has set in London, England.
+- In its instance of taking no arguments, it returns an object specifying whether the sun has set at the provided latitude and longitude.
 
 Returned Object has three attributes; one to denote each type of sunset. These each have a boolean flag attached to them to check if that type of sunset has happened yet.
 
@@ -169,12 +171,11 @@ End point: /api/isSunrise/index.php
 
 	
 	Functions
-		isSunrise()
-		isSunrise(float lat, float lon)
+		isSunrise()  -  /api/isSunrise/index.php
+		isSunrise(float lat, float lon)  -  /api/isSunrise/index.php?lat=31&lon=32
 
-Overloaded endpoint.
-In its instance of taking no arguments, it returns an object specifying whether the sun has risen in London, England.
-In its instance of taking no arguments, it returns an object specifying whether the sun has risen at the provided latitude and longitude.
+- In its instance of taking no arguments, it returns an object specifying whether the sun has risen in London, England.
+- In its instance of taking no arguments, it returns an object specifying whether the sun has risen at the provided latitude and longitude.
 
 Returned Object has three attributes; one to denote each type of sunrise. These each have a boolean flag attached to them to check if that type of sunrise has happened yet.
 
