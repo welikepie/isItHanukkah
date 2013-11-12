@@ -54,6 +54,8 @@ These are the outputs for the lights used in the Arduino application:
 
 Here is a wiring diagram:
 
+![isitHannukah Arduino Wiring Diagram](https://raw.github.com/welikepie/isItHannukah/master/site/img/wiring.png)
+
 - WIFI Shield not depicted, though it must be attached to the Arduino in order to get IsitHannukah working
 
 
