@@ -19,16 +19,16 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">Is it Hannukah?</h1
+                <h1 class="title">Is it Hannukah?</h1>
             </header>
         </div>
 
         <div class="wrapper clearfix">
             <nav>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Installation</a></li>
-                        <li><a href="#">Docs</a></li>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#apidocs">Docs</a></li>
                     </ul>
                 </nav>
         </div>
@@ -38,7 +38,7 @@
 
                 <article>
                     <header>
-                        <h1>What is it?</h1>
+                        <h1><a name="home">What is it?</a></h1>
                         <p>Is It Hannukah is a project consisting of an API and an arduino project, with the sole intention of creating a Menorah using the web.</p>
 
                         <p>The API is RESTful with three seperate endpoints, written in PHP, documented further down this document.</p>
@@ -47,7 +47,7 @@
                     </header>
                     <hr/>
                     <section>
-                        <h2>Setting up your Arduino</h2>
+                        <h2><a name="installation">Setting up your Arduino</a></h2>
                         <p>IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah.</p> 
                         <p>To run this sketch, internet connectivity is required. The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino.</p>
                     </section>
@@ -64,15 +64,45 @@
                     <hr/>
 
                     <section>
-                        <h2>API Docs</h2>
-                        <p>IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah.</p> 
-                        <p>To run this sketch, internet connectivity is required. The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino.</p>
+                        <h2><a name="apidocs">API Docs</a></h2>
+                        <p>This is an API to determine whether it is Hanukkah, and what day of Hannukah we currently find ourselves in. Additionally, there is also code to determine whether the sun is down at a particular latitude/longitude pairing as well as whether the sun is up.</p> 
+                        <p>To interact with the API we send a GET request to the endpoints with the parameters specified as a query string will yield the response to the query.</p>
                     </section>
                     <section>
-                        <h3>doTheyKnow()</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
-<pre>
-    <code>
+                        <h3>API Base URL</h3>
+                        <p>At the time of publication, the base URL for the API is <a href="http://dev.welikepie.com/isItHannukah">http://dev.welikepie.com/isItHannukah</a>. All API endpoints can be appended to this baseURL to produce a call.</p>
+                    <setion>
+                        <h3>Function List</h3>
+                        <pre>
+                            <code>
+doTheyKnow()
+isSundown()
+isSunrise()
+                            </code>
+                        </pre>
+                    </setion>
+                    <section>
+                        <h3 class="endpoint">doTheyKnow()</h3>
+                        <h4>End point: /api/doTheyKnow/index.php</h4>
+                        <p>Functions:</p>
+                        <pre>
+                            <code>
+doTheyKnow()  -  /api/doTheyKnow/index.php
+doTheyKnow(float lat, float lon)  -  /api/doTheyKnow/index.php?lat=31&lon=32
+doTheyKnow(int forceDay)  -  /api/doTheyKnow/index.php?forceDay=5
+                            </code>
+                        </pre>
+
+                        <ul>
+                            <li>In its instance of taking no arguments, it returns whether it is Hannukah or not in London, England.</li>
+                            <li>In its instance of taking two arguments, it returns whether it is Hannukah or not at whatever latitude (lat) and longitude (lon) are provided.</li>
+                            <li>In its instance of taking one argument, it returns as if Hannukah is happening on the day specified by the forceDay parameter.</li>
+                        </ul>
+
+                        <p>Returned object has the attribute of "isHappening" regardless, with "true" marking it is hannukah, and "false" marking it as not being Hannukah. If isHappening is true, the "dayOf" attribute will be set to the current day of Hannukah.</p>
+
+                        <pre>
+                            <code>
 // During Hannukah;
 {
     "dayOf" : 1,
@@ -83,22 +113,72 @@
 {
     "isHappening" : false
 }
-</code>
-</pre>
+                            </code>
+                        </pre>
+                    </section>
+
+                    <section>
+                        <h3 class="endpoint">isSundown()</h3>
+                        <h4>End point: /api/isSundown/index.php</h4>
+                        <pre>
+                            <code>
+isSundown()  -  /api/isSundown/index.php
+isSundown(float lat, float lon)  -  /api/isSundown/index.php?lat=31&lon=32
+                            </code>
+                        </pre>
+
+                        <ul>
+                            <li>In its instance of taking no arguments, it returns an object specifying whether the sun has set in London, England.</li>
+                            <li>In its instance of taking no arguments, it returns an object specifying whether the sun has set at the provided latitude and longitude.</li>
+                        </ul>
+
+                        <p>
+                            The returned Object has three attributes; one to denote each type of sunset. These each have a boolean flag attached to them to check if that type of sunset has happened yet.
+                        </p>
+                        <pre>
+                            <code>
+{
+    "civil_sundown" : false,
+    "nautical_sundown" : false,
+    "astronomical_sundown" : false
+}
+                            </code>
+                        </pre>
                     </section>
                     <section>
-                        <h3>isSundown()</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
-                    </section>
-                    <section>
-                        <h3>isSunrise</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                        <h3 class="endpoint">isSunrise</h3>
+                        <h4>End point: /api/isSunrise/index.php</h4>
+                        <p>Functions:
+                            <pre>
+                            <code>
+isSunrise()  -  /api/isSunrise/index.php
+isSunrise(float lat, float lon)  -  /api/isSunrise/index.php?lat=31&lon=32
+                            </code>
+                        </pre>
+                        </p>
+
+                        <ul>
+                            <li>In its instance of taking no arguments, it returns an object specifying whether the sun has risen in London, England</li>
+                            <li>In its instance of taking no arguments, it returns an object specifying whether the sun has risen at the provided latitude and longitude.</li>
+                        </ul>
+
+                        <p>The returned Object has three attributes; one to denote each type of sunrise. These each have a boolean flag attached to them to check if that type of sunrise has happened yet.</p>
+
+                        <pre>
+                            <code>
+{
+    "civil_sunrise" : false,
+    "nautical_sunrise" : false,
+    "astronomical_sunrise" : true
+}
+                            </code>
+                        </pre>
                     </section>
                 
                 </article>
 
                 <aside>
-                    <h3>aside</h3>
+                    <h3>Our very own Menorah</h3>
                     <p>Lorem Ipsum Dolor Sit Amet</p>
                 </aside>
 
@@ -107,7 +187,7 @@
 
         <div class="footer-container">
             <footer class="wrapper">
-                <p>By We Like Pie</p>
+                <p><a href="http://www.welikepie.com">A We Like Pie Production</a></p>
             </footer>
         </div>
 

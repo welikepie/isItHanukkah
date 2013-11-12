@@ -36,7 +36,6 @@ hr {
 
 img {
     vertical-align: middle;
-    width: 100%;
 }
 
 fieldset {
@@ -134,7 +133,8 @@ nav a:hover {
 
 .footer-container footer {
     color: white;
-    padding: 20px 0;
+    padding: 10px 0;
+    text-align: center;
 }
 
 .title {
@@ -164,12 +164,26 @@ pre code {
     }
 pre {
     padding: 0.1em 0.5em 0.3em 1.2em;
-    border-left: 11px solid #468fda;
+    border-left: 11px solid rgba(70, 143, 218, 0.5);
     margin: 1.7em 0 1.7em 0.3em;
     overflow: auto;
     width: 93%;
     background-color: #FAFAFA;
     }
+
+.endpoint {
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+.footer-container a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer-container a:hover {
+    text-decoration: underline;
+}
 
 /* ==========================================================================
    Media Queries
