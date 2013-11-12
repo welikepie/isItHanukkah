@@ -3,7 +3,9 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Arran Ross-Paterson - @arranrp
+    Alexander Roche - @alexhacked
+    Charlotte Spencer - @charlotteis
 
 # THANKS
 

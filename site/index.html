@@ -9,6 +9,7 @@
 
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
 
         <!--[if lt IE 9]>
             <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
@@ -18,15 +19,18 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">h1.title</h1>
-                <nav>
+                <h1 class="title">Is it Hannukah?</h1
+            </header>
+        </div>
+
+        <div class="wrapper clearfix">
+            <nav>
                     <ul>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Installation</a></li>
+                        <li><a href="#">Docs</a></li>
                     </ul>
                 </nav>
-            </header>
         </div>
 
         <div class="main-container">
@@ -34,26 +38,68 @@
 
                 <article>
                     <header>
-                        <h1>article header h1</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec.</p>
+                        <h1>What is it?</h1>
+                        <p>Is It Hannukah is a project consisting of an API and an arduino project, with the sole intention of creating a Menorah using the web.</p>
+
+                        <p>The API is RESTful with three seperate endpoints, written in PHP, documented further down this document.</p>
+
+                        <p>To get this running an Arduino we put a sketch.ino file on to it. This lets you create your own Menorah by providing the middleman between the Arduino circuits and the IsItHannukah API.</p>
                     </header>
+                    <hr/>
                     <section>
-                        <h2>article section h2</h2>
+                        <h2>Setting up your Arduino</h2>
+                        <p>IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah.</p> 
+                        <p>To run this sketch, internet connectivity is required. The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino.</p>
+                    </section>
+                    <section>
+                        <h3>Download the App</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
                     </section>
                     <section>
-                        <h2>article section h2</h2>
+                        <h3>Wiring your Menorah</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor.</p>
+                        <img src="https://raw.github.com/welikepie/isItHannukah/master/site/img/wiring.png"></img>
+                    </section>
+
+                    <hr/>
+
+                    <section>
+                        <h2>API Docs</h2>
+                        <p>IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah.</p> 
+                        <p>To run this sketch, internet connectivity is required. The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino.</p>
+                    </section>
+                    <section>
+                        <h3>doTheyKnow()</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+<pre>
+    <code>
+// During Hannukah;
+{
+    "dayOf" : 1,
+    "isHappening" : true
+}
+
+// Outside of Hannukah;
+{
+    "isHappening" : false
+}
+</code>
+</pre>
+                    </section>
+                    <section>
+                        <h3>isSundown()</h3>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
                     </section>
-                    <footer>
-                        <h3>article footer h3</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor.</p>
-                    </footer>
+                    <section>
+                        <h3>isSunrise</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                    </section>
+                
                 </article>
 
                 <aside>
                     <h3>aside</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+                    <p>Lorem Ipsum Dolor Sit Amet</p>
                 </aside>
 
             </div> <!-- #main -->
@@ -61,7 +107,7 @@
 
         <div class="footer-container">
             <footer class="wrapper">
-                <h3>footer</h3>
+                <p>By We Like Pie</p>
             </footer>
         </div>
 
