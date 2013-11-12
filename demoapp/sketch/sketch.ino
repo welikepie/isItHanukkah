@@ -25,7 +25,7 @@ String apiRequest = "doTheyKnow/?forceDay=4"; //API call. Debug call to light up
 
 uint8_t* __brkval;
 char server[] = "dev.welikepie.com";    // name address for WeLikePie servers
-int blinkenLichten = blinkingProbability;
+int blinkLight = blinkingProbability;
 long goOutStart = 0;
 long startTime = 0;
 int globalLights = -1;
@@ -233,11 +233,11 @@ void lightEmUp(int lights){ //LIGHTS!
       lights = 8;
     }
 	if((millis() - goOutStart) <= goOutTime || goOutBool == false){ //check if lights shouldn't go out (or choice for them to go out is disabled)
-	if(blinkenLichten > blinkingProbability){--blinkenLichten;}
+	if(blinkLight > blinkingProbability){--blinkLight;}
 		for(int i = 0; i <= 8; i++){//cycle through lights
 			if(i <= lights){		//if I less than | equal to lights
 			  if(flicker==true){	//if flicker is true
-				if(random(1000) > blinkenLichten){ //random percentage to flicker on
+				if(random(1000) > blinkLight){ //random percentage to flicker on
 				  digitalWrite(nums[i],HIGH); //ON!
 				}
 				else{
@@ -253,7 +253,7 @@ void lightEmUp(int lights){ //LIGHTS!
 		}
 	}
 	else{ //if supposed to fade out
-	if(blinkenLichten < 1000){++blinkenLichten;} //increment temporary variable
+	if(blinkLight < 1000){++blinkLight;} //increment temporary variable
 	if(globalLights<8){
 	if(flicker==true){ //flickering for the Shamash (always on)
 		if(random(1000) > blinkingProbability){
@@ -269,7 +269,7 @@ void lightEmUp(int lights){ //LIGHTS!
 		for(int i = 1; i <= 8; i++){
 			if(i <= lights){
 			  if(flicker==true){
-				if(random(1000) > blinkenLichten){
+				if(random(1000) > blinkLight){
 				  digitalWrite(nums[i],HIGH);
 				}
 				else{
@@ -288,7 +288,7 @@ void lightEmUp(int lights){ //LIGHTS!
 	for(int i = 0; i <= 8; i++){
 			if(i <= lights){
 			  if(flicker==true){
-				if(random(1000) > blinkenLichten){
+				if(random(1000) > blinkLight){
 				  digitalWrite(nums[i],HIGH);
 				}
 				else{
