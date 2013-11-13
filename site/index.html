@@ -19,7 +19,7 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">Hannukah as a Service</h1>
+                <h1 class="title">Hanukkah as a Service</h1>
                 <img src="img/menorah.png"/>
             </header>
         </div>
@@ -40,40 +40,40 @@
 
                     <header>
                         <h1><a name="home">What is it?</a></h1>
-                        <p>"Hannukah as a Service" is a way to create your very own electronic Menorah with the use of an Arduino and our custom "isitHannukah" API.</p>
+                        <p><em>"Hanukkah as a Service"</em> is a way to create your very own electronic menorah with the use of an Arduino and our custom <em>"isitHanukkah"</em> API.</p>
 
-                        <p>Using our custom sketch file for the Arduino IDE, you can create your own Menorah by providing the middleman between the Arduino circuits and the isitHannukah API.</p>
+                        <p>Using our sketch file for the Arduino IDE, you can create your own menorah by providing the middleman between the Arduino circuits and the isitHanukkah API.</p>
                     </header>
                     <hr/>
                     <section>
                         <h2><a name="installation">Setting up your Arduino</a></h2>
-                        <p>To run our sketch file and build your own Menorah, internet connectivity is required through the use of a WiFi shield for the arduino.</p>
-                        <p>You also need to have the aJSON library installed in order to parse data between the API and the Arduino. You can find out how to install this library <a href="http://arduino.cc/en/Guide/Libraries">here</a> and you can also find the aJSON library within our <a href="https://github.com/welikepie/isItHannukah/">GitHub Repository</a> in the "demoapp" folder.</p>
+                        <p>To run our sketch file and build your own menorah, internet connectivity is required through the use of a <a href="http://arduino.cc/en/Main/ArduinoWiFiShield">WiFi shield</a> for the arduino.</p>
+                        <p>You also need to have the aJSON library installed in order to parse data between the API and the Arduino. You can find out how to install this library <a href="http://arduino.cc/en/Guide/Libraries">here</a> and you can also find the aJSON library within our <a href="https://github.com/welikepie/isItHanukkah/">GitHub Repository</a> in the <em>"demoapp"</em> folder.</p>
                     </section>
                     <section>
                         <h3>Download the App</h3>
-                        <p>You can download our demo application from the <a href="https://github.com/welikepie/isItHannukah/">isitHannukah GitHub respository</a>. You'll find the sketch.ino file you need in the "demoapp/sketch" folder.</p>
+                        <p>You can download our demo application from the <a href="https://github.com/welikepie/isItHanukkah/">isitHanukkah GitHub respository</a>. You'll find the sketch.ino file you need in the <em>"demoapp/sketch"</em> folder.</p>
                     </section>
                     <section>
                         <h3>Debugging the IDE</h3>
-                        <p>At the time of writing, there is a bug within the memory management code included in the Arduino IDE. The free() function used to free up memory does not work properly with the version of C/C++ included. You need to replace your current malloc.c file within your Arduino installation, with the malloc.c file we've included in our <a href="https://github.com/welikepie/isItHannukah/">GitHub Repo</a>.
+                        <p>At the time of writing, there is a bug within the memory management code included in the Arduino IDE. The free() function used to free up memory does not work properly with the version of C/C++ included. You need to <strong>replace your current malloc.c file</strong> within your Arduino installation, with the malloc.c file we've included in our <a href="https://github.com/welikepie/isItHanukkah/">GitHub Repo</a>.
                     </section>
                     <section>
                         <h3>Wiring your Menorah</h3>
-                        <p>The following image shows you how to wire up your awesome new Menorah. Note that the required WiFi shield is not pictured, the shield should be attached to the Arduino in order to interact with the "isitHannukah" API.</p>
-                        <img src="https://raw.github.com/welikepie/isItHannukah/master/site/img/wiring.png"></img>
+                        <p>The following image shows you how to wire up your awesome new menorah. Note that the required WiFi shield is not pictured, the shield should be attached to the Arduino in order to interact with the "isitHanukkah" API.</p>
+                        <img src="https://raw.github.com/welikepie/isItHanukkah/master/site/img/wiring.png"></img>
                     </section>
 
                     <hr/>
 
                     <section>
                         <h2><a name="apidocs">API Docs</a></h2>
-                        <p>This is an API to determine whether it is Hanukkah, and what day of Hannukah we currently find ourselves in. Additionally, there is also code to determine whether the sun is down at a particular latitude/longitude pairing as well as whether the sun is up.</p> 
+                        <p>This is an API to determine whether it is Hanukkah, and what day of Hanukkah we currently find ourselves in. Additionally, there is also code to determine whether the sun is down at a particular latitude/longitude pairing as well as whether the sun is up.</p> 
                         <p>To interact with the API we send a GET request to the endpoints with the parameters specified as a query string will yield the response to the query.</p>
                     </section>
                     <section>
                         <h3>API Base URL</h3>
-                        <p>At the time of publication, the base URL for the API is <a href="http://dev.welikepie.com/isItHannukah">http://dev.welikepie.com/isItHannukah</a>. All API endpoints can be appended to this baseURL to produce a call.</p>
+                        <p>At the time of publication, the base URL for the API is <a href="http://dev.welikepie.com/isItHanukkah">http://dev.welikepie.com/isItHanukkah</a>. All API endpoints can be appended to this baseURL to produce a call.</p>
                     <setion>
                         <h3>Function List</h3>
                         <pre>
@@ -97,22 +97,22 @@ doTheyKnow(int forceDay)  -  /api/doTheyKnow/index.php?forceDay=5
                         </pre>
 
                         <ul>
-                            <li>In its instance of taking no arguments, it returns whether it is Hannukah or not in London, England.</li>
-                            <li>In its instance of taking two arguments, it returns whether it is Hannukah or not at whatever latitude (lat) and longitude (lon) are provided.</li>
-                            <li>In its instance of taking one argument, it returns as if Hannukah is happening on the day specified by the forceDay parameter.</li>
+                            <li>In its instance of taking no arguments, it returns whether it is Hanukkah or not in London, England.</li>
+                            <li>In its instance of taking two arguments, it returns whether it is Hanukkah or not at whatever latitude (lat) and longitude (lon) are provided.</li>
+                            <li>In its instance of taking one argument, it returns as if Hanukkah is happening on the day specified by the forceDay parameter.</li>
                         </ul>
 
-                        <p>Returned object has the attribute of "isHappening" regardless, with "true" marking it is hannukah, and "false" marking it as not being Hannukah. If isHappening is true, the "dayOf" attribute will be set to the current day of Hannukah.</p>
+                        <p>Returned object has the attribute of "isHappening" regardless, with "true" marking it is Hanukkah, and "false" marking it as not being Hanukkah. If isHappening is true, the "dayOf" attribute will be set to the current day of Hanukkah.</p>
 
                         <pre>
                             <code>
-// During Hannukah;
+// During Hanukkah;
 {
     "dayOf" : 1,
     "isHappening" : true
 }
 
-// Outside of Hannukah;
+// Outside of Hanukkah;
 {
     "isHappening" : false
 }
@@ -183,7 +183,7 @@ isSunrise(float lat, float lon)  -  /api/isSunrise/index.php?lat=31&lon=32
                 <aside>
                     <h3>Our very own Menorah</h3>
                     
-                    <!--- <p><iframe class="vine-embed" src="https://vine.co/v/hjaVHpMK9IL/embed/simple" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script></p> -->
+                    <p><iframe class="vine-embed" src="https://vine.co/v/hTtY7l9H6pZ/embed/simple" width="320" height="320" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script></p>
                 </aside>
 
             </div> <!-- #main -->
