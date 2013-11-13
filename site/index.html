@@ -40,25 +40,27 @@
 
                     <header>
                         <h1><a name="home">What is it?</a></h1>
-                        <p>Is It Hannukah is a project consisting of an API and an arduino project, with the sole intention of creating a Menorah using the web.</p>
+                        <p>"Hannukah as a Service" is a way to create your very own electronic Menorah with the use of an Arduino and our custom "isitHannukah" API.</p>
 
-                        <p>The API is RESTful with three seperate endpoints, written in PHP, documented further down this document.</p>
-
-                        <p>To get this running an Arduino we put a sketch.ino file on to it. This lets you create your own Menorah by providing the middleman between the Arduino circuits and the IsItHannukah API.</p>
+                        <p>Using our custom sketch file for the Arduino IDE, you can create your own Menorah by providing the middleman between the Arduino circuits and the isitHannukah API.</p>
                     </header>
                     <hr/>
                     <section>
                         <h2><a name="installation">Setting up your Arduino</a></h2>
-                        <p>IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah.</p> 
-                        <p>To run this sketch, internet connectivity is required. The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino.</p>
+                        <p>To run our sketch file and build your own Menorah, internet connectivity is required through the use of a WiFi shield for the arduino.</p>
+                        <p>You also need to have the aJSON library installed in order to parse data between the API and the Arduino. You can find out how to install this library <a href="http://arduino.cc/en/Guide/Libraries">here</a> and you can also find the aJSON library within our <a href="https://github.com/welikepie/isItHannukah/">GitHub Repository</a> in the "demoapp" folder.</p>
                     </section>
                     <section>
                         <h3>Download the App</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                        <p>You can download our demo application from the <a href="https://github.com/welikepie/isItHannukah/">isitHannukah GitHub respository</a>. You'll find the sketch.ino file you need in the "demoapp/sketch" folder.</p>
+                    </section>
+                    <section>
+                        <h3>Debugging the IDE</h3>
+                        <p>At the time of writing, there is a bug within the memory management code included in the Arduino IDE. The free() function used to free up memory does not work properly with the version of C/C++ included. You need to replace your current malloc.c file within your Arduino installation, with the malloc.c file we've included in our <a href="https://github.com/welikepie/isItHannukah/">GitHub Repo</a>.
                     </section>
                     <section>
                         <h3>Wiring your Menorah</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor.</p>
+                        <p>The following image shows you how to wire up your awesome new Menorah. Note that the required WiFi shield is not pictured, the shield should be attached to the Arduino in order to interact with the "isitHannukah" API.</p>
                         <img src="https://raw.github.com/welikepie/isItHannukah/master/site/img/wiring.png"></img>
                     </section>
 
