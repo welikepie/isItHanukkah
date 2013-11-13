@@ -59,9 +59,38 @@
                         <p>At the time of writing, there is a bug within the memory management code included in the Arduino IDE. The free() function used to free up memory does not work properly with the version of C/C++ included. You need to <strong>replace your current malloc.c file</strong> within your Arduino installation, with the malloc.c file we've included in our <a href="https://github.com/welikepie/isItHanukkah/">GitHub Repo</a>.
                     </section>
                     <section>
+                        <h3>Configuring your sketch file</h3>
+                        <p>In order for your menorah to work correctly, you need to set the following configuration settings within the sketch.ino file</p>
+                        <p>
+                            <ul>
+                                <li>The <code>flicker</code> boolean - used to determine of the output produces a flickering effect or not.</li>
+                                <li>The <code>blinkLight</code> integer determines how many times, out of 1000, the output is set to off.</li>
+                                <li>The <code>interval</code> integer determines after how many milliseconds the API is re-polled. Every ten minutes works rather well. Under every 10 seconds chokes the arduino up.</li>
+                                <li>The <code>goOutBool</code> boolean determines if the lights are supposed to go out or not. Set to true to have them go out, false to stay lit.</li>
+                                <li>The <code>goOutTime</code> integer determines after how many milliseconds the lights should go out, if they should go out.</li>
+                                <li><strong>[MANDATORY]</strong> the <code>ssid[]</code> is where you need to write your wireless network ID.</li>
+                                <li><strong>[MANDATORY]</strong> the <code>pass[]</code> is where you need to set the password for your wireless network.</li>
+                                <li><strong>[MANDATORY]</strong> the <code>apiRequest</code> is where you make you API request to the server. As of current, the only endpoint supported is the <code>doTheyKnow</code> endpoint.</li>
+                            </ul>
+                        </p>
+
+                    </section>
+                    <section>
                         <h3>Wiring your Menorah</h3>
                         <p>The following image shows you how to wire up your awesome new menorah. Note that the required WiFi shield is not pictured, the shield should be attached to the Arduino in order to interact with the "isitHanukkah" API.</p>
                         <img src="https://raw.github.com/welikepie/isItHanukkah/master/site/img/wiring.png"></img>
+                        <h4>Menorah "candle" outputs</h4>
+                        <ul>
+                            <li>A0 is the output for the Shamash</li>
+                            <li>A1 is the output for the candle lit on the first day of Hannukah</li>
+                            <li>A2 is the output for the candle lit on the second day of Hannukah</li>
+                            <li>A3 is the output for the candle lit on the third day of Hannukah</li>
+                            <li>A4 is the output for the candle lit on the fourth day of Hannukah</li>
+                            <li>A5 is the output for the candle lit on the fifth day of Hannukah</li>
+                            <li>2 is the output for the candle lit on the sixth day of Hannukah</li>
+                            <li>3 is the output for the candle lit on the seventh day of Hannukah</li>
+                            <li>4 is the output for the candle lit on the eighth day of Hannukah</li>
+                        </ul>
                     </section>
 
                     <hr/>
