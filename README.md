@@ -1,19 +1,18 @@
-#Is It Hannukah?#
+#Hanukkah as a Service#
 
 ##What is it?##
 
-_Is It Hannukah_ is a project consisting of an API and an arduino project, with the sole intention of creating a Menorah using the web.
+"_Hanukkah as a Service_" is a way to create your very own electronic menorah with the use of an Arduino and our custom "_isitHanukkah_" API.
 
-The API is RESTful with three seperate endpoints, written in PHP, documented further down this document.
-
-To get this running an Arduino we put a sketch.ino file on to it. This lets you create your own Menorah by providing the middleman between the Arduino circuits and the IsItHannukah API.
+Using our sketch file for the Arduino IDE, you can create your own menorah by providing the middleman between the Arduino circuits and the isitHanukkah API.
 
 #Arduino Implementation#
 
 ##What is it?##
-IsitHannukah uses a sketch file to turn an Arduino in to a Menorah. It uses a custom created API to find out of it is indeed Hannukah. 
+
+Hanukkah as a Service uses a sketch file to turn an Arduino in to a menorah. It uses a custom created API to find out of it is indeed Hanukkah. 
 **To run this sketch, internet connectivity is required.**
-The sketch file that we are using for the Arduino requires a WiFi shield to be used with the Arduino. 
+The sketch file that we are using for the Arduino requires a [WiFi](http://arduino.cc/en/Main/ArduinoWiFiShield) shield to be used with the Arduino. 
 
 ##How do I get it working?##
 To get the sketch up and running, you will need a version of the Arduino IDE that supports the WiFi shield.
@@ -37,7 +36,7 @@ This will likely be in the Applications folder. Right click Arduino.app and sele
 You'll find mallo.c here: 
 > /Contents/Resources/Java/hardware/arduino/cores/arduino/avr-libc.
 
-Once you've found the malloc.c file; copy and paste it into the "demoapp" folder of this repository. 
+Once you've found the malloc.c file; replace it with the malloc.c file within the "demoapp" folder of this repository. 
 
 ###Outputs for lights###
 These are the outputs for the lights used in the Arduino application:
@@ -56,7 +55,7 @@ Here is a wiring diagram:
 
 ![isitHannukah Arduino Wiring Diagram](https://raw.github.com/welikepie/isItHannukah/master/site/img/wiring.png)
 
-- WIFI Shield not depicted, though it must be attached to the Arduino in order to get IsitHannukah working
+- WIFI Shield not depicted, though it must be attached to the Arduino in order to get IsitHanukkah working
 
 
 ###Installing the aJson library###
@@ -67,7 +66,7 @@ The files for the library are contained in the **aJson-master.zip** file which i
 ###Running the Sketch###
 
 Now we have patched the IDE and imported the libraries, we can get to work on our Arduino Menorah. 
-The sketch.ino file contains the code necessary for the Menorah, we need to load this in to the Arduino IDE. The sketch.ino file can be found in the demoapp/sketch folder.
+The sketch.ino file contains the code necessary for the menorah, we need to load this in to the Arduino IDE. The sketch.ino file can be found in the demoapp/sketch folder.
 What we do then, is load the sketch.ino file, which can be done by opening up the Arduino IDE and File > Open and navigate to the sketch.ino file. 
 
 Upon opening the sketch, there are some configuring steps which need to take place for the menorah.
