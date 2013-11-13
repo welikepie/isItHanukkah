@@ -133,7 +133,7 @@ if(client.connected()){
   if (client.connect(server, 80)) {
     Serial.println("connected to server and carrying out API request."); 
     // Make a HTTP request:
-    client.println("GET /isItHannukah/api/"+apiRequest+" HTTP/1.1");
+    client.println("GET /isItHanukkah/api/"+apiRequest+" HTTP/1.1");
     // forces the day to return as the eighth day of hannukah.
     client.println("Host: dev.welikepie.com");
     client.println("Connection: close");
